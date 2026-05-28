@@ -1,53 +1,64 @@
 import streamlit as st
-import pandas as pd
-from datetime import datetime
+import random
 
 # 페이지 설정
-st.set_page_config(page_title="보건실 예약 앱", page_icon="🏥")
+st.set_page_config(page_title="연애 코칭 앱", page_icon="💖")
 
-st.title("🏥 보건실 예약 시스템")
+st.title("💖 연애 코칭 앱")
+st.write("현재 고민을 선택하면 간단한 연애 조언을 제공합니다.")
 
-# 세션 상태 초기화
-if "reservations" not in st.session_state:
-    st.session_state.reservations = []
+# 고민 선택
+problem = st.selectbox(
+    "어떤 고민이 있나요?",
+    [
+        "썸 타는 중",
+        "고백 고민",
+        "연락이 뜸해요",
+        "데이트 고민",
+        "이별 후 힘들어요"
+    ]
+)
 
-# 예약 입력 폼
-with st.form("reservation_form"):
-    st.subheader("예약하기")
+# 조언 데이터
+advice_dict = {
+    "썸 타는 중": [
+        "상대방의 말에 공감해주는 것이 중요해요 😊",
+        "너무 조급해하지 말고 자연스럽게 다가가세요.",
+        "작은 관심 표현이 큰 호감을 만들 수 있어요."
+    ],
 
-    name = st.text_input("이름")
-    student_id = st.text_input("학번")
-    reason = st.selectbox(
-        "방문 사유",
-        ["두통", "복통", "감기", "상처 치료", "기타"]
-    )
+    "고백 고민": [
+        "완벽한 타이밍보다 진심이 더 중요해요 💌",
+        "부담 없는 분위기에서 솔직하게 말해보세요.",
+        "결과보다 용기 낸 자신을 더 칭찬하세요."
+    ],
 
-    visit_date = st.date_input("예약 날짜")
-    visit_time = st.time_input("예약 시간")
+    "연락이 뜸해요": [
+        "상대방의 상황을 먼저 이해해보세요.",
+        "너무 자주 확인하기보다 여유를 가져보세요 ☕",
+        "가벼운 안부 메시지가 분위기를 바꿀 수 있어요."
+    ],
 
-    submit = st.form_submit_button("예약하기")
+    "데이트 고민": [
+        "상대가 편안함을 느끼는 장소를 선택해보세요.",
+        "비싼 장소보다 대화가 잘 되는 분위기가 중요해요 😊",
+        "작은 배려가 좋은 인상을 남깁니다."
+    ],
 
-    if submit:
-        if name and student_id:
-            reservation = {
-                "이름": name,
-                "학번": student_id,
-                "사유": reason,
-                "날짜": str(visit_date),
-                "시간": str(visit_time)
-            }
+    "이별 후 힘들어요": [
+        "시간이 지나면 마음도 조금씩 회복돼요 🌿",
+        "자신을 돌보는 시간을 가져보세요.",
+        "새로운 취미나 활동이 도움이 될 수 있어요."
+    ]
+}
 
-            st.session_state.reservations.append(reservation)
+# 버튼
+if st.button("조언 받기"):
+    advice = random.choice(advice_dict[problem])
 
-            st.success("예약이 완료되었습니다!")
-        else:
-            st.error("이름과 학번을 입력하세요.")
+    st.success("💡 오늘의 연애 조언")
+    st.write(advice)
 
-# 예약 목록 표시
-st.subheader("📋 예약 목록")
-
-if st.session_state.reservations:
-    df = pd.DataFrame(st.session_state.reservations)
-    st.dataframe(df, use_container_width=True)
-else:
-    st.info("현재 예약이 없습니다.")
+# 하단 문구
+st.divider()
+st.caption("Made with Streamlit 💖")
